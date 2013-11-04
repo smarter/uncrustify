@@ -376,12 +376,18 @@ static int token_indent(c_token_t type)
               __LINE__, indent_column);                   \
    } while (0)
 
+static bool is_absolute_indent_continue(struct parse_frame& frm, int pse_tos)
+{
+   int ic = cpd.settings[UO_indent_continue].n;
+
+   return frm.pse[pse_tos].indent_cont && ic < 0;
+}
 
 static int calc_indent_continue(struct parse_frame& frm, int pse_tos)
 {
    int ic = cpd.settings[UO_indent_continue].n;
 
-   if ((ic < 0) && frm.pse[pse_tos].indent_cont)
+   if (is_absolute_indent_continue(frm, pse_tos))
    {
       return frm.pse[pse_tos].indent;
    }
@@ -1204,8 +1210,8 @@ void indent_text(void)
                    (frm.pse[idx].type != CT_CONSTR_COLON) &&
                    (frm.pse[idx].type != CT_ASSIGN_NL))
             {
-               idx--;
-               skipped = true;
+              idx--;
+              skipped = true;
             }
             frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
             if (cpd.settings[UO_indent_func_param_double].b)
@@ -1251,7 +1257,8 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
          }
-         if ((cpd.settings[UO_indent_continue].n != 0) && (!skipped))
+         if ((cpd.settings[UO_indent_continue].n != 0) &&
+             (!skipped || is_absolute_indent_continue(frm, frm.pse_tos)))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
             if ((pc->level == pc->brace_level) &&
