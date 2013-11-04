@@ -1383,6 +1383,7 @@ void indent_text(void)
           ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
       {
          vardefcol = 0;
+         frm.pse[frm.pse_tos].indent_cont = false;
       }
 
       /**
