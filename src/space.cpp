@@ -140,6 +140,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if ((first->type == CT_VBRACE_OPEN) && (second->type != CT_NL_CONT))
    {
+      if (second->type == CT_SEMICOLON)
+      {
+         log_rule("sp_after_vbrace_before_semi");
+         return(cpd.settings[UO_sp_after_vbrace_before_semi].a);
+      }
       log_rule("FORCE");
       return(AV_FORCE);
    }

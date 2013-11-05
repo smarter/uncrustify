@@ -317,6 +317,8 @@ enum uncrustify_options
    UO_sp_brace_else,
    UO_sp_brace_typedef,
 
+   UO_sp_after_vbrace_before_semi, // space after virtual brace, if followed by a semicolon
+
    UO_sp_catch_brace,
    UO_sp_brace_catch,
    UO_sp_finally_brace,
