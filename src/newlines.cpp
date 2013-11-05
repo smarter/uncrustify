@@ -1846,6 +1846,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
 
       if (cpd.settings[UO_nl_if_leave_one_liners].b &&
           ((pc->parent_type == CT_IF) ||
+           (pc->parent_type == CT_ELSEIF) ||
            (pc->parent_type == CT_ELSE)))
       {
          LOG_FMT(LNL1LINE, "false (if/else)\n");
