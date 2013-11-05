@@ -1125,6 +1125,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_inside_sparen].a);
    }
 
+   if ((cpd.settings[UO_sp_after_bit_colon].a != AV_IGNORE) &&
+       (first->type == CT_BIT_COLON))
+   {
+      log_rule("sp_after_bit_colon");
+      return(cpd.settings[UO_sp_after_bit_colon].a);
+   }
+   if ((cpd.settings[UO_sp_before_bit_colon].a != AV_IGNORE) &&
+       (second->type == CT_BIT_COLON))
+   {
+      log_rule("sp_before_bit_colon");
+      return(cpd.settings[UO_sp_before_bit_colon].a);
+   }
+
    if ((cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE) &&
        (first->type == CT_CLASS_COLON))
    {

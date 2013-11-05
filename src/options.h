@@ -257,6 +257,8 @@ enum uncrustify_options
    UO_sp_enum_assign,           // space around = in enum
    UO_sp_enum_before_assign,    // space before = in enum
    UO_sp_enum_after_assign,     // space after = in enum
+   UO_sp_after_bit_colon,       // space after bit field ':'
+   UO_sp_before_bit_colon,      // space before bit field ':'
    UO_sp_after_class_colon,     // space after class ':'
    UO_sp_before_class_colon,    // space before class ':'
    UO_sp_after_constr_colon,
