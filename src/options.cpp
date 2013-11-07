@@ -1280,6 +1280,9 @@ void register_options(void)
                   "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_space_count", UO_pp_space_count, AT_NUM,
                   "Sets the number of spaces added with pp_space");
+   unc_add_option("pp_space_ignore_whole_file_block", UO_pp_space_ignore_whole_file_block, AT_BOOL,
+                  "When pp_space=True, if the whole file is covered by one #if blocks,\n"
+                  "use \"number of #if blocks minus 1\" as the number of spaces.");
    unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
                   "The indent for #region and #endregion in C# and '#pragma region' in C/C++");
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
@@ -1878,40 +1881,41 @@ void print_options(FILE *pfile)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_newlines].le                   = LE_AUTO;
-   cpd.settings[UO_input_tab_size].n              = 8;
-   cpd.settings[UO_output_tab_size].n             = 8;
-   cpd.settings[UO_indent_ctor_init_leading].n    = 2;
-   cpd.settings[UO_indent_columns].n              = 8;
-   cpd.settings[UO_indent_with_tabs].n            = 1;
-   cpd.settings[UO_indent_label].n                = 1;
-   cpd.settings[UO_indent_access_spec].n          = 1;
-   cpd.settings[UO_sp_before_comma].a             = AV_REMOVE;
-   cpd.settings[UO_sp_paren_comma].a              = AV_FORCE;
-   cpd.settings[UO_string_escape_char].n          = '\\';
-   cpd.settings[UO_sp_not].a                      = AV_REMOVE;
-   cpd.settings[UO_sp_inv].a                      = AV_REMOVE;
-   cpd.settings[UO_sp_addr].a                     = AV_REMOVE;
-   cpd.settings[UO_sp_deref].a                    = AV_REMOVE;
-   cpd.settings[UO_sp_member].a                   = AV_REMOVE;
-   cpd.settings[UO_sp_sign].a                     = AV_REMOVE;
-   cpd.settings[UO_sp_incdec].a                   = AV_REMOVE;
-   cpd.settings[UO_sp_after_type].a               = AV_FORCE;
-   cpd.settings[UO_sp_before_nl_cont].a           = AV_ADD;
-   cpd.settings[UO_sp_before_case_colon].a        = AV_REMOVE;
-   cpd.settings[UO_sp_before_semi].a              = AV_REMOVE;
-   cpd.settings[UO_sp_after_semi].a               = AV_ADD;
-   cpd.settings[UO_sp_after_semi_for].a           = AV_FORCE;
-   cpd.settings[UO_cmt_indent_multi].b            = true;
-   cpd.settings[UO_cmt_multi_check_last].b        = true;
-   cpd.settings[UO_pp_indent_count].n             = 1;
-   cpd.settings[UO_align_left_shift].b            = true;
-   cpd.settings[UO_indent_align_assign].b         = true;
-   cpd.settings[UO_sp_pp_concat].a                = AV_ADD;
-   cpd.settings[UO_sp_angle_shift].a              = AV_ADD;
-   cpd.settings[UO_sp_after_vbrace_before_semi].a = AV_ADD;
-   cpd.settings[UO_sp_word_brace].a               = AV_ADD;
-   cpd.settings[UO_sp_word_brace_ns].a            = AV_ADD;
+   cpd.settings[UO_newlines].le                        = LE_AUTO;
+   cpd.settings[UO_input_tab_size].n                   = 8;
+   cpd.settings[UO_output_tab_size].n                  = 8;
+   cpd.settings[UO_indent_ctor_init_leading].n         = 2;
+   cpd.settings[UO_indent_columns].n                   = 8;
+   cpd.settings[UO_indent_with_tabs].n                 = 1;
+   cpd.settings[UO_indent_label].n                     = 1;
+   cpd.settings[UO_indent_access_spec].n               = 1;
+   cpd.settings[UO_sp_before_comma].a                  = AV_REMOVE;
+   cpd.settings[UO_sp_paren_comma].a                   = AV_FORCE;
+   cpd.settings[UO_string_escape_char].n               = '\\';
+   cpd.settings[UO_sp_not].a                           = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a                           = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a                          = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a                         = AV_REMOVE;
+   cpd.settings[UO_sp_member].a                        = AV_REMOVE;
+   cpd.settings[UO_sp_sign].a                          = AV_REMOVE;
+   cpd.settings[UO_sp_incdec].a                        = AV_REMOVE;
+   cpd.settings[UO_sp_after_type].a                    = AV_FORCE;
+   cpd.settings[UO_sp_before_nl_cont].a                = AV_ADD;
+   cpd.settings[UO_sp_before_case_colon].a             = AV_REMOVE;
+   cpd.settings[UO_sp_before_semi].a                   = AV_REMOVE;
+   cpd.settings[UO_sp_after_semi].a                    = AV_ADD;
+   cpd.settings[UO_sp_after_semi_for].a                = AV_FORCE;
+   cpd.settings[UO_cmt_indent_multi].b                 = true;
+   cpd.settings[UO_cmt_multi_check_last].b             = true;
+   cpd.settings[UO_pp_indent_count].n                  = 1;
+   cpd.settings[UO_align_left_shift].b                 = true;
+   cpd.settings[UO_indent_align_assign].b              = true;
+   cpd.settings[UO_sp_pp_concat].a                     = AV_ADD;
+   cpd.settings[UO_sp_angle_shift].a                   = AV_ADD;
+   cpd.settings[UO_sp_after_vbrace_before_semi].a      = AV_ADD;
+   cpd.settings[UO_sp_word_brace].a                    = AV_ADD;
+   cpd.settings[UO_sp_word_brace_ns].a                 = AV_ADD;
+   cpd.settings[UO_pp_space_ignore_whole_file_block].b = true;
 }
 
 

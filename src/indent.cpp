@@ -1892,7 +1892,8 @@ void indent_preproc(void)
    int     pp_level_sub = 0;
 
    /* Scan to see if the whole file is covered by one #ifdef */
-   if (ifdef_over_whole_file())
+   if (cpd.settings[UO_pp_space_ignore_whole_file_block].b &&
+       ifdef_over_whole_file())
    {
       pp_level_sub = 1;
    }
